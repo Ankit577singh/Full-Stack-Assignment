@@ -47,6 +47,7 @@ Frontend runs on: `http://localhost:5173`
 │   ├── middleware/      # Auth middleware
 │   ├── routes/          # API routes
 │   ├── scripts/         # Database init scripts
+│   ├── utils/           # distance function
 │   └── server.js        # Express app entry
 ├── frontend/
 │   ├── src/
@@ -73,6 +74,10 @@ Frontend runs on: `http://localhost:5173`
 ### Dashboard
 - `GET /api/dashboard/stats` - Manager stats
 - `GET /api/dashboard/employee` - Employee stats
+
+
+### Reports
+- `GET /api/reports//daily-summary` - Daily summary report (Manager only)
 
 ## Notes
 
