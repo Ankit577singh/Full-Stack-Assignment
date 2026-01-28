@@ -1,7 +1,3 @@
-# 📘 Technical & Theory Questions – Answers
-
----
-
 ## 1. If this app had 10,000 employees checking in simultaneously, what would break first? How would you fix it?
 
 **What might break first:**
