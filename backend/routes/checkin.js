@@ -1,6 +1,7 @@
 const express = require('express');
 const pool = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
+const getDistanceKm = require('../utils/distance');
 
 const router = express.Router();
 
@@ -29,6 +30,29 @@ router.post('/', authenticateToken, async (req, res) => {
         if (!client_id) {
             return res.status(400).json({ success: false, message: 'Client ID is required' });
         }
+
+        // get client location 
+        const [clients] = await pool.execute(
+            'SELECT latitude, longitude FROM clients WHERE id = ?',
+            [client_id]
+        );
+
+        if (clients.length === 0) {
+            return res.status(404).json({ success: false, message: 'Client not found' });
+        }
+
+        const clientLat = clients[0].latitude;
+        const clientLng = clients[0].longitude;
+
+        // Calculate distance
+        const distance = getDistanceKm(
+            latitude,
+            longitude,
+            clientLat,
+            clientLng
+        );
+
+        const roundedDistance = Number(distance.toFixed(2));
 
         // Check if employee is assigned to this client
         const [assignments] = await pool.execute(
@@ -63,7 +87,8 @@ router.post('/', authenticateToken, async (req, res) => {
             success: true,
             data: {
                 id: result.insertId,
-                message: 'Checked in successfully'
+                message: 'Checked in successfully',
+                distance_from_client: roundedDistance
             }
         });
     } catch (error) {
