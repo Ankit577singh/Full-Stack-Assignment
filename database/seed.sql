@@ -27,7 +27,7 @@ INSERT INTO employee_clients (employee_id, client_id, assigned_date) VALUES
 (4, 5, '2024-01-10');
 
 -- Insert some sample checkins
-INSERT INTO checkins (employee_id, client_id, checkin_time, checkout_time, latitude, longitude, notes, status) VALUES
+INSERT INTO checkins (employee_id, client_id, checkin_time, checkout_time, latitude, longitude,distance_from_client, notes, status) VALUES
 (2, 1, '2024-01-15 09:15:00', '2024-01-15 11:30:00', '28.4946', '77.0887', 'Regular visit', 'checked_out'),
 (2, 2, '2024-01-15 12:00:00', '2024-01-15 14:00:00', '28.4595', '77.0266', 'Product demo', 'checked_out'),
 (2, 3, '2024-01-15 15:00:00', '2024-01-15 17:30:00', '28.4947', '77.0952', 'Follow up meeting', 'checked_out'),

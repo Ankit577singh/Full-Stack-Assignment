@@ -12,6 +12,9 @@ function CheckIn({ user }) {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
+    const [distance, setDistance] = useState(null);
+    const [farWarning, setFarWarning] = useState(false);
+
     useEffect(() => {
         fetchData();
         getCurrentLocation();
@@ -56,6 +59,7 @@ function CheckIn({ user }) {
     };
 
     const handleCheckIn = async (e) => {
+        e.preventDefault();  
         setError('');
         setSuccess('');
         setSubmitting(true);
@@ -73,7 +77,16 @@ function CheckIn({ user }) {
                 setSelectedClient('');
                 setNotes('');
                 fetchData(); // Refresh data
-            } else {
+
+                const dist = response.data.data.distance_from_client;
+                setDistance(dist);
+                setFarWarning(dist > 0.5);
+                setSuccess(`Checked in successfully! Distance: ${dist} km`);
+                setSelectedClient('');
+               
+            }
+            
+            else {
                 setError(response.data.message);
             }
         } catch (err) {
@@ -157,6 +170,18 @@ function CheckIn({ user }) {
                     >
                         {submitting ? 'Processing...' : 'Check Out'}
                     </button>
+
+                    {distance !== null && (
+                        <p className="text-sm text-gray-700 mt-2">
+                            Distance from client: <strong>{distance} km</strong>
+                        </p>
+                    )}
+
+                    {farWarning && (
+                        <p className="text-sm text-red-600 mt-1">
+                            ⚠ You are far from the client location
+                        </p>
+                    )}
                 </div>
             )}
 

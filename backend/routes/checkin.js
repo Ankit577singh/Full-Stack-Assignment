@@ -78,9 +78,9 @@ router.post('/', authenticateToken, async (req, res) => {
         }
 
         const [result] = await pool.execute(
-            `INSERT INTO checkins (employee_id, client_id, latitude ,  longitude, notes , status)
-             VALUES (?, ?, ?, ?, ?, 'checked_in')`,
-            [req.user.id, client_id, latitude, longitude, notes || null]
+            `INSERT INTO checkins (employee_id, client_id, latitude ,  longitude, distance_from_client, notes , status)
+             VALUES (?, ?, ?, ?, ?, ?, 'checked_in')`,
+            [req.user.id, client_id, latitude, longitude,roundedDistance, notes || null]
         );
 
         res.status(201).json({
