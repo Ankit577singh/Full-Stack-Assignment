@@ -139,6 +139,7 @@ function History({ user }) {
                                 <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Check-in</th>
                                 <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Check-out</th>
                                 <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Duration</th>
+                                <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Distance</th>  {/* --- distance column --- */}
                                 <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Notes</th>
                             </tr>
                         </thead>
@@ -172,6 +173,13 @@ function History({ user }) {
                                                 {duration}
                                             </span>
                                         </td>
+                                         {/* --- Distance data added here --- */}
+                                        <td className="px-4 py-3 text-sm">
+                                            <span className={`${checkin.distance_from_client > 0.5 ? 'text-red-600 font-bold' : 'text-gray-700'}`}>
+                                                {checkin.distance_from_client ? `${checkin.distance_from_client} km` : '0.00 km'}
+                                            </span>
+                                        </td>
+                                        
                                         <td className="px-4 py-3 text-sm text-gray-600">
                                             {checkin.notes || '-'}
                                         </td>
