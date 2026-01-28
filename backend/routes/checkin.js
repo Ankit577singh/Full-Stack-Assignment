@@ -27,7 +27,7 @@ router.post('/', authenticateToken, async (req, res) => {
         const { client_id, latitude, longitude, notes } = req.body;
 
         if (!client_id) {
-            return res.status(200).json({ success: false, message: 'Client ID is required' });
+            return res.status(400).json({ success: false, message: 'Client ID is required' });
         }
 
         // Check if employee is assigned to this client
@@ -42,7 +42,7 @@ router.post('/', authenticateToken, async (req, res) => {
 
         // Check for existing active check-in
         const [activeCheckins] = await pool.execute(
-            'SELECT * FROM checkins WHERE employee_id = ? AND status = "checked_in"',
+            "SELECT * FROM checkins WHERE employee_id = ? AND status = 'checked_in'",
             [req.user.id]
         );
 
@@ -54,7 +54,7 @@ router.post('/', authenticateToken, async (req, res) => {
         }
 
         const [result] = await pool.execute(
-            `INSERT INTO checkins (employee_id, client_id, lat, lng, notes, status)
+            `INSERT INTO checkins (employee_id, client_id, latitude, longitude, notes, status)
              VALUES (?, ?, ?, ?, ?, 'checked_in')`,
             [req.user.id, client_id, latitude, longitude, notes || null]
         );
@@ -76,19 +76,17 @@ router.post('/', authenticateToken, async (req, res) => {
 router.put('/checkout', authenticateToken, async (req, res) => {
     try {
         const [activeCheckins] = await pool.execute(
-            'SELECT * FROM checkins WHERE employee_id = ? ORDER BY checkin_time DESC LIMIT 1',
+            "SELECT * FROM checkins WHERE employee_id = ? AND status = 'checked_in' ORDER BY checkin_time DESC LIMIT 1",
             [req.user.id]
         );
 
         if (activeCheckins.length === 0) {
             return res.status(404).json({ success: false, message: 'No active check-in found' });
         }
-
         await pool.execute(
-            'UPDATE checkins SET checkout_time = NOW(), status = "checked_out" WHERE id = ?',
+            "UPDATE checkins SET checkout_time =  CURRENT_TIMESTAMP, status = 'checked_out' WHERE id = ?",
             [activeCheckins[0].id]
         );
-
         res.json({ success: true, message: 'Checked out successfully' });
     } catch (error) {
         console.error('Checkout error:', error);
